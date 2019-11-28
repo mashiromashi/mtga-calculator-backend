@@ -10,6 +10,7 @@ const cors = require("cors")
 // routers
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const accountRouter = require('./routes/account')
 
 // dotenv config
 dotenv.config();
@@ -40,6 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/account', accountRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

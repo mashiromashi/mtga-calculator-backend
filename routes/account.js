@@ -1,57 +1,60 @@
 const express = require('express')
 const app = express()
-const accountModel = require("../models/account")
+const AccountModel = require("../models/account")
 
-// get all user for the admin for manage
+// get all user accounts
 app.get("/", async (req, res, next) => {
     // query
-    const getAllAccounts = await accountModel.find({})
+    const accounts = await AccountModel.find({})
+
     try {
-        if (getAllAccounts) {
-            // returns status 200 and the accounts
-            res.status(200).send(getAllAccounts)
+        if (accounts) {
+            // returns status 200 upon succession and all the user accounts
+            res.status(200).send(accounts)
         }
+    } catch (error) {
+        // returns status 500 and error
+        res.status(500).send(error)
     }
-    catch (err) {
-        // returns status 500 as well as error in the console
+})
+
+// create user accout
+app.post("/", async (req, res, next) => {
+    // query
+    const account = new AccountModel(req.body)
+    console.log(account);
+
+    try {
+        if (account) {
+            await account.save();
+            // returns status code 200 with message
+            res.status(201).send(account)
+        }
+    } catch (err) {
+        // returns status code 500 with error message
         res.status(500).send(err)
     }
 })
 
-// create new user account
-app.post("/", async (req, res, next) => {
-    // query
-    // const createAccount = await accountModel(req.body)
-    console.log(req.body)
-    // try {
-    //     if (createAccount) {
-    //         // returns status 201 if the creation succeeds
-    //         res.status(201).send("Account successfully created")
-    //     }
-    // }
-    // catch (err) {
-    //     // returns status 500 as well as the error in the console
-    //     res.status(500).send(err)
-    // }
-})
-
 // user login module
 app.post("/login", async (req, res, next) => {
-    const { username, password } = req.body;
+    const { username, password } = req.body
     // query
-    const login = await accountModel.findOne({
+    const loginUser = await AccountModel.findOne({
         username: username
-    }, (err, user) => {
-        if (err) throw err
-        if (user) {
-            user.comparePassword(password, (err, match) => {
-                res.status(200).send({
-                    username: login.username,
-                    password: login.password
+    },
+        (err, login) => {
+            if (err) throw err
+            if (login) {
+                login.comparePassword(password, (err, match) => {
+                    res.status(200).send({
+                        username: loginUser.username,
+                        password: loginUser.password
+                    })
                 })
-            })
+            }
         }
-    })
+    )
 })
 
 module.exports = app

@@ -2,6 +2,8 @@
 // require modules
 const mongoose = require("mongoose")
 const moment = require("moment")
+const bcrypt = require("bcrypt")
+const SALT_WORK_FACTOR = 10
 
 const dateTime = () => moment(new Date()).format("DD-MMM-YYYY_HH:mm:ss")
 
@@ -47,7 +49,7 @@ accountSchema.pre("save", function (next) {
     });
 });
 
-userSchema.methods.comparePassword = function (password, callback) {
+accountSchema.methods.comparePassword = function (password, callback) {
     bcrypt.compare(password, this.password, (err, isMatch) =>
         callback(err, isMatch)
     );
