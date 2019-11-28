@@ -1,2 +1,4 @@
 node_modules
 table Structures
+yarn.lock
+.env
