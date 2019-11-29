@@ -25,6 +25,11 @@ const accountSchema = mongoose.Schema({
         type: String,
         require: true,
         default: dateTime
+    },
+    isActive: {
+        type: Boolean,
+        default: true,
+        require: true
     }
 });
 
