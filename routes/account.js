@@ -40,17 +40,21 @@ app.post("/", async (req, res, next) => {
 app.post("/login", async (req, res, next) => {
     const { username, password } = req.body
     // query
-    const loginUser = await AccountModel.findOne({
+    await AccountModel.findOne({
         username: username
     },
-        (err, login) => {
+        (err, user) => {
             if (err) throw err
-            if (login) {
-                login.comparePassword(password, (err, match) => {
-                    res.status(200).send({
-                        username: loginUser.username,
-                        password: loginUser.password
-                    })
+            if (user) {
+                user.comparePassword(password, (err, match) => {
+                    if (match && !err) {
+                        res.status(200).send(
+                            {
+                                username: user.username,
+                                password: user.password
+                            }
+                        )
+                    }
                 })
             }
         }
